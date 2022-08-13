@@ -8,3 +8,11 @@ opcion=$(whiptail --title 'Menu Telnet' --fb \
 "3" "Velocidad de conexión" \
 "4" "Salir" 3>&1 1>&2 2>&3)
 echo La opción es: $opcion
+
+case $opcion in
+    1)
+        ip=$(ifconfig enp0s3 | awk 'NR==2 {print $2}')
+        mask=$(ifconfig enp0s3 | awk 'NR==2 {print $4}')
+        
+        whiptail --title "Opcion 1: Información de red" --msgbox "IP: $ip\nMASK: $mask" 20 40 2
+esac
