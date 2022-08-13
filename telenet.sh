@@ -17,4 +17,15 @@ case $opcion in
         dns_ip=$(grep "nameserver" /etc/resolv.conf | awk 'NR==1 {print $2}')
         dns_name=$(grep "nameserver" /etc/resolv.conf | awk 'NR==1 {print $2}' | nslookup | awk 'NR==1 {print $4}')
         whiptail --title "Opcion 1: Información de red" --msgbox "IP: $ip\nMASK: $mask\nGW: $gw\nDNS: $dns_ip cuyo nombre de dominio es $dns_name" 20 40 2
+        ;;
+    2)
+        input=$(whiptail --title "Opción 2: Consulta DNS" --inputbox "Escribe la IP o el nombre de dominio del DNS" 8 39 3>&1 1>&2 2>&3 )
+        exitstatus=$?
+        if [ $exitstatus = 0 ]; then
+            consulta=$(nslookup $input)
+            whiptail --title "Opción 2: Consulta DNS" --msgbox "$consulta" 18 30
+        else
+            whiptail --msgbox "Usuario canceló la consulta." 8 20
+        fi
+        ;;
 esac
