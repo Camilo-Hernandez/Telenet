@@ -14,6 +14,7 @@ case $opcion in
         ip=$(ifconfig enp0s3 | awk 'NR==2 {print $2}')
         mask=$(ifconfig enp0s3 | awk 'NR==2 {print $4}')
         gw=$(ip r | awk 'NR==1 {print$3}')
-        
-        whiptail --title "Opcion 1: Información de red" --msgbox "IP: $ip\nMASK: $mask\nGW: $gw" 20 40 2
+        dns_ip=$(grep "nameserver" /etc/resolv.conf | awk 'NR==1 {print $2}')
+        dns_name=$(grep "nameserver" /etc/resolv.conf | awk 'NR==1 {print $2}' | nslookup | awk 'NR==1 {print $4}')
+        whiptail --title "Opcion 1: Información de red" --msgbox "IP: $ip\nMASK: $mask\nGW: $gw\nDNS: $dns_ip cuyo nombre de dominio es $dns_name" 20 40 2
 esac
