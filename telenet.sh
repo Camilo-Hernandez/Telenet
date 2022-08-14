@@ -34,8 +34,9 @@ case $opcion in
         if [ $exitstatus = 0 ]; then
             avg_t=$(ping -c1 -q $input | awk -F/ '/rtt/ {print $5}')
             avg_t2=$(awk -v var1=$avg_t -v var2=2 'BEGIN { print  ( var1 / var2 ) }')
+            distancia=$(awk -v var1=$avg_t -v var2=300 'BEGIN { print  ( var1 * var2 ) }')
             
-            whiptail --title "Opción 3: Velocidad de conexión" --msgbox "Velocidad de la luz: 300.000 Km/s \nRetardo promedio: $avg_t2 ms" 20 60
+            whiptail --title "Opción 3: Velocidad de conexión" --msgbox "Velocidad de la luz: 300.000 Km/s \nRetardo promedio: $avg_t2 ms \nDistancia al servidor web: $distancia Km" 20 60
         else
             whiptail --msgbox "Usuario canceló la consulta." 8 20
         fi
