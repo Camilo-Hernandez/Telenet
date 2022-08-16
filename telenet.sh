@@ -32,7 +32,7 @@ case $opcion in
         input=$(whiptail --title "Opción 3: Velocidad de conexión" --inputbox "Escribe la IP o el nombre de dominio del sitio web" 8 41 3>&1 1>&2 2>&3 )
         exitstatus=$?
         if [ $exitstatus = 0 ]; then
-            avg_t=$(ping -c1 -q $input | awk -F/ '/rtt/ {print $5}')
+            avg_t=$(ping -c16 -q $input | awk -F/ '/rtt/ {print $5}')
             avg_t2=$(awk -v var1=$avg_t -v var2=2 'BEGIN { print  ( var1 / var2 ) }')
             distancia=$(awk -v var1=$avg_t -v var2=300 'BEGIN { print  ( var1 * var2 ) }')
             num_bytes=$(ping -c2 -q google.com | awk 'NR==1 {print $4}')
