@@ -29,18 +29,29 @@ case $opcion in
         fi
         ;;
     3)
-        input=$(whiptail --title "Opción 3: Velocidad de conexión" --inputbox "Escribe la IP o el nombre de dominio del sitio web" 8 41 3>&1 1>&2 2>&3 )
+        # Conectando a Spotify.com como servidor por defecto
+        avg_t=$(ping -c1 -q spotify.com | awk -F/ '/rtt/ {print $5}')
+        avg_t2=$(awk -v var1=$avg_t -v var2=2 'BEGIN { print  ( var1 / var2 ) }')
+        distancia=$(awk -v var1=$avg_t -v var2=300 'BEGIN { print  ( var1 * var2 ) }')
+        num_bytes=$(ping -c2 -q google.com | awk 'NR==1 {print $4}' | awk -F '(' '{print $1}')
+        num_bits=$(($num_bytes*8))
+        tasa_bps=$(awk -v var1=$num_bits -v var2=$avg_t2 'BEGIN { print  ( var1 / var2 ) }')
+        
+        input=$(whiptail --title "Opción 3: Velocidad de conexión" --inputbox "Conexión con el servidor de Spotify.com\n\nVelocidad de la luz: 300.000 Km/s \nRetardo promedio: $avg_t2 ms \nDistancia al servidor web: $distancia Km \nNúmero de bits enviados: $num_bits bits\nTasa de transferencia: $tasa_bps bps\n\n Escribe la IP o el nombre de dominio del sitio web:" 20 60 3>&1 1>&2 2>&3 )
+        
+        # Conectando a un servidor por dado por el usuario
         exitstatus=$?
         if [ $exitstatus = 0 ]; then
-            avg_t=$(ping -c16 -q $input | awk -F/ '/rtt/ {print $5}')
+            avg_t=$(ping -c1 -q $input | awk -F/ '/rtt/ {print $5}')
             avg_t2=$(awk -v var1=$avg_t -v var2=2 'BEGIN { print  ( var1 / var2 ) }')
             distancia=$(awk -v var1=$avg_t -v var2=300 'BEGIN { print  ( var1 * var2 ) }')
-            num_bytes=$(ping -c2 -q google.com | awk 'NR==1 {print $4}')
+            num_bytes=$(ping -c2 -q google.com | awk 'NR==1 {print $4}' | awk -F '(' '{print $1}')
             num_bits=$(($num_bytes*8))
             tasa_bps=$(awk -v var1=$num_bits -v var2=$avg_t2 'BEGIN { print  ( var1 / var2 ) }')
-            whiptail --title "Opción 3: Velocidad de conexión" --msgbox "Velocidad de la luz: 300.000 Km/s \nRetardo promedio: $avg_t2 ms \nDistancia al servidor web: $distancia Km \nNúmero de bits enviados: $num_bits bits\nTasa de transferencia: $tasa_bps bps" 20 60
+            whiptail --title "Opción 3: Velocidad de conexión" --msgbox "Conexión con el servidor de $input\n\nVelocidad de la luz: 300.000 Km/s \nRetardo promedio: $avg_t2 ms \nDistancia al servidor web: $distancia Km \nNúmero de bits enviados: $num_bits bits\nTasa de transferencia: $tasa_bps bps" 20 60
         else
             whiptail --msgbox "Usuario canceló la consulta." 8 20
         fi
+
         ;;
 esac
